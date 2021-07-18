@@ -1,0 +1,15 @@
+#canvas{
+    border: 5px solid red;
+    background : url("bg2.png");
+    -webkit-animation: animatedBackground 30s linear infinite;
+    background-repeat: repeat-y;
+    margin-left: 70px;
+}
+
+@-webkit-keyframes animatedBackground {
+    from { background-position: 0 0; }
+    to { background-position: 0 1000px; }
+}
+#player{
+    display:none;
+}
