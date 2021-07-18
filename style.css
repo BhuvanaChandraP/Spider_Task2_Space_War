@@ -13,3 +13,12 @@
 #player{
     display:none;
 }
+#alien1{
+    display: none;
+}
+#bullet{
+    display: none; 
+}
+#blast{
+    display: none; 
+}
