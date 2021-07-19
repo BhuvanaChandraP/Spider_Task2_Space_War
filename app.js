@@ -12,6 +12,51 @@ let W=1200,H=600;
 let prev_counter = 0;
 let counter = 0;
 let score = 0;
+let collect = [];
+let names = [];
+let i=0;
+let flg = 0;
+let userName = prompt("Enter your user name");
+for(;userName == "" && userName == null;)
+{
+    userName = prompt("Enter your user name"); 
+}
+function scoreBoard(userName,highScore)
+{
+          
+    names = JSON.parse(localStorage.getItem("array1"));
+    
+    //console.log(names);
+    if(names == null)
+    {
+        names = [];
+        names.push([userName,highScore]);
+    }
+    
+    for(i=0;i<names.length;i++)
+    {
+        if(userName == names[i][0])
+        {
+            names[i][0] = userName;
+            if(names[i][1]<highScore)
+            {
+                names[i][1] = highScore;
+            }
+            localStorage.setItem("array1", JSON.stringify(names));
+            flg = 1;
+        }
+    }
+    
+    if((flg == 0) || (names.length == 0))
+    {
+        
+        names.push([userName,highScore]);
+        
+    }
+    localStorage.setItem("array1", JSON.stringify(names));
+    
+}
+
 //let bg = document.getElementById("canvas1")
 
 function startGame()
@@ -239,7 +284,16 @@ function updateGameArea()
 
 
     var no =  Math.random();
-	if(no<0.01){
+    var num ;
+    if(score > 5)
+    {
+        num = 0.05;
+    }
+    else
+    {
+        num = 0.01;
+    }
+	if(no< num){
 		var x = Math.floor(Math.random()*(1200-50));
 		// multiplied by 100 to generate enemies in the region from 0 to 100px.
 		var y = Math.floor(Math.random()*50);
@@ -289,6 +343,7 @@ function updateGameArea()
 			alert(`Game over. Press OK to restart! your score:${score}`);
             //alert(`your score:${score}`);
             GameCanvas.stop();
+            scoreBoard(userName,score);
 			//gameover = true;
 		}
 
