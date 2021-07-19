@@ -1,5 +1,20 @@
 let collect = [];
 
+let check = document.getElementById("setting");
+let check1;
+
+
+function display (){
+    if(document.getElementById("score").checked){
+        check1 = document.getElementById("score").value;
+    }
+    if(document.getElementById("time").checked){
+        check1 = document.getElementById("time").value;
+    }
+    localStorage.setItem("type",check1);
+    console.log(check1);
+        
+}
 
 
 

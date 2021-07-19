@@ -3,7 +3,7 @@
     background : url("bg2.png");
     -webkit-animation: animatedBackground 30s linear infinite;
     background-repeat: repeat-y;
-    margin-left: 70px;
+    margin-left: 65px;
 }
 
 @-webkit-keyframes animatedBackground {
@@ -21,4 +21,33 @@
 }
 #blast{
     display: none; 
+}
+
+#play{
+    position: absolute;
+    right: 5px;
+}
+#pause{
+    position: absolute;
+    right: 5px;
+    /* color: #ffffff; */
+}
+#level{
+    position: absolute;
+    left: 2px;
+}
+#levelNo{
+    position: absolute;
+    left: 2px;
+    top :30px
+}
+#score{
+    position: absolute;
+    left: 2px;
+    top :70px
+}
+#score1{
+    position: absolute;
+    left: 2px;
+    top :100px
 }

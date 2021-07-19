@@ -16,6 +16,12 @@ let collect = [];
 let names = [];
 let i=0;
 let flg = 0;
+let pause1 = document.getElementById("pause");
+let play1 = document.getElementById("play");  
+let level = document.getElementById("levelNo");
+let score1 = document.getElementById("score1");
+score1.innerHTML = `&nbsp ${score}`;
+play1.style.display = "none";
 let userName = prompt("Enter your user name");
 for(;userName == "" && userName == null;)
 {
@@ -57,6 +63,21 @@ function scoreBoard(userName,highScore)
     
 }
 
+
+function pause ()
+{
+    clearInterval(GameCanvas.interval);
+    pause1.style.display = "none";
+    play1.style.display = "block";
+}
+function play()
+{
+    GameCanvas.intervalFunction();
+    play1.style.display = "none";
+    pause1.style.display = "block";
+}
+
+
 //let bg = document.getElementById("canvas1")
 
 function startGame()
@@ -67,6 +88,8 @@ function startGame()
     //bg1 = new Generator (1200,600,70,30,"bg");
     player = new Generator(70, 90, 560, 500,"player");
     alien = new Generator(50,50,50,50,"alien");
+    //level  = new Generator("15px", "verdana", 120, 20, "text");
+    //level  = new Generator(100, 20, 1150, 10, "text");
     
 
     
@@ -86,6 +109,7 @@ function shoot()
         setTimeout(function(){ 
             var index = aliens.indexOf(enemy);
             aliens.splice(index,1);
+            score1.innerHTML = `&nbsp ${score}`;
             blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
             blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
             blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
@@ -100,6 +124,8 @@ function shoot()
 
     });
 }
+
+
 function isCollidingWithBullet(r1,r2){
 	var x_axis = Math.abs(r1.x - r2.x)<= Math.max(r1.width,r2.width);
 	var y_axis = Math.abs(r1.y - r2.y)<= Math.max(r1.height,r2.height);
@@ -172,8 +198,37 @@ let GameCanvas = {
     stop: function () {
         clearInterval(this.interval);
     }
-   
+    // shoot : function()
+    // {
+    //     bullets = new Generator (10,30,(player.x+ player.width/2 -5),player.y,"bullet");
+    //     aliens.forEach(function(enemy){
+    //     if(isCollidingWithBullet(bullets,enemy)){
+    //     score++;
+    //     this.state = "inactive";
+    //     console.log("enemy died");
+    //     //var index = aliens.indexOf(enemy);
+    //     setTimeout(function(){ 
+    //         var index = aliens.indexOf(enemy);
+    //         aliens.splice(index,1);
+    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+    //      }, 300);
+    //     //aliens.splice(index,1);
+
+       
+    //     //blast2.update();
+    //     }
+
+    // });
 }
+
+
+    
+   
+
 
 
 
@@ -191,7 +246,7 @@ function Generator(width, height, x, y, type)
     this.dx = 10;
     //this.dx1 = Math.random()*10 +2;
     this.dx1 = 1;
-    this.dy1 = 2;
+    this.dy1 = 1;
     //this.img = img;
     this.update = function()
     {
@@ -216,6 +271,14 @@ function Generator(width, height, x, y, type)
         else if(this.type == "blast")
         {
             ctx.drawImage(blast1,this.x, this.y, this.width, this.height );
+        }
+        else if(this.type == "text")
+        {
+            // ctx.font = this.width + " " + this.height;
+            // ctx.font = "vernada";
+            // ctx.fillStyle = "#fffff";
+            ctx.font = '20px serif';
+            ctx.fillText("level:", this.x, this.y);
         }
         else
         {
@@ -255,10 +318,15 @@ function updateGameArea()
     GameCanvas.frameNo += 1;
     player.newPos();
     player.update();
+    
+    //level.text = `level : 1 `
+    //level.update();
     //alien1.y += -0.5;
-    aliens.forEach(function(enemy){
-		enemy.update();
-	});
+
+
+    // aliens.forEach(function(enemy){
+	// 	enemy.update();
+	// });
     
 
     // for (let i = 0; i < aliens.length; i++) {
@@ -285,51 +353,224 @@ function updateGameArea()
 
     var no =  Math.random();
     var num ;
-    if(score > 5)
+    //console.log(GameCanvas.frameNo);
+    console.log(localStorage.getItem("type"));
+    if(localStorage.getItem("type") == "score")
     {
-        num = 0.05;
+        if(score < 15)                        // GameCanvas.frameNo <1000
+        {
+            num = 0.01;
+            level.innerHTML = `&nbsp  1`;
+            for(let i=0;i<aliens.length;i++)
+            {
+                    
+                    aliens[i].x += aliens[i].dx1;
+                    if(aliens[i].x>1150 || aliens[i].x<50)
+                    {
+                        aliens[i].dx1 *= -1;
+    
+                    }
+                    aliens[i].update();
+                   
+    
+            }
+            
+        }
+        else if(score < 40)         //  GameCanvas.frameNo >1000
+        {
+            num = 0.01;
+            level.innerHTML = `&nbsp  2`;
+            //GameCanvas.clearCanvas();
+            for(let i=0;i<aliens.length;i++)
+                {
+                    
+                    aliens[i].y += aliens[i].dy1;
+                    // if(aliens[i].x>1150 || aliens[i].x<50)
+                    // {
+                    //     aliens[i].dx1 *= -1;
+    
+                    // }
+                    aliens[i].update();
+                   
+    
+                }
+        }
+        else
+        {
+            if(score < 75)
+            {
+                num = 0.009;
+                level.innerHTML = ` &nbsp  3`;
+            }
+            else if (score < 125 )
+            {
+                num = 0.01;
+                level.innerHTML = ` &nbsp  4`;
+            }     
+            else 
+            {
+                num = 0.03;
+                level.innerHTML = ` &nbsp  5`;
+            }    
+            //level.innerHTML = ` &nbsp  2`;
+            aliens.forEach(function(alien1){
+           
+                alien1.x += alien1.dx1;
+                alien1.y += alien1.dy1;
+                if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  //|| alien1.y <20 || alien1.y >560
+                //if(this.x >= W-this.width || this.x <=0)
+                {
+                    alien1.dx1 *= -1;
+                    //alien1.dy1 *= -1;
+        
+                }
+                this.y += 0.5;
+                alien1.update();
+                //alien1.update();
+            });
+           
+        }
+    
+    
     }
-    else
+    else 
     {
-        num = 0.01;
+        if(GameCanvas.frameNo <1500)                        // GameCanvas.frameNo <1000
+        {
+            num = 0.01;
+            level.innerHTML = `&nbsp  1`;
+            for(let i=0;i<aliens.length;i++)
+            {
+                    
+                    aliens[i].x += aliens[i].dx1;
+                    if(aliens[i].x>1150 || aliens[i].x<50)
+                    {
+                        aliens[i].dx1 *= -1;
+    
+                    }
+                    aliens[i].update();
+                   
+    
+            }
+            
+        }
+        else if(GameCanvas.frameNo < 3000)         //  GameCanvas.frameNo >1000
+        {
+            num = 0.01;
+            level.innerHTML = `&nbsp  2`;
+            //GameCanvas.clearCanvas();
+            for(let i=0;i<aliens.length;i++)
+                {
+                    
+                    aliens[i].y += aliens[i].dy1;
+                    // if(aliens[i].x>1150 || aliens[i].x<50)
+                    // {
+                    //     aliens[i].dx1 *= -1;
+    
+                    // }
+                    aliens[i].update();
+                   
+    
+                }
+        }
+        else
+        {
+            if(score < 5000)
+            {
+                num = 0.009;
+                level.innerHTML = ` &nbsp  3`;
+            }
+            else if (score < 10000 )
+            {
+                num = 0.01;
+                level.innerHTML = ` &nbsp  4`;
+            }     
+            else 
+            {
+                num = 0.03;
+                level.innerHTML = ` &nbsp  5`;
+            }    
+            //level.innerHTML = ` &nbsp  2`;
+            aliens.forEach(function(alien1){
+           
+                alien1.x += alien1.dx1;
+                alien1.y += alien1.dy1;
+                if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  //|| alien1.y <20 || alien1.y >560
+                //if(this.x >= W-this.width || this.x <=0)
+                {
+                    alien1.dx1 *= -1;
+                    //alien1.dy1 *= -1;
+        
+                }
+                this.y += 0.5;
+                alien1.update();
+                //alien1.update();
+            });
+           
+        }
+    
+    
     }
+
+   
+
+
+
 	if(no< num){
 		var x = Math.floor(Math.random()*(1200-50));
 		// multiplied by 100 to generate enemies in the region from 0 to 100px.
 		var y = Math.floor(Math.random()*50);
 
-		var speed = Math.random()*1 +2;
-		var negative = Math.random();
-		if(negative<0.5){
-			speed = -speed;
-		}
+		// var speed = Math.random()*1 +2;
+		// var negative = Math.random();
+		// if(negative<0.5){
+		// 	speed = -speed;
+		// }
         //aliens.push(new aliensfun(x,y,speed));
         aliens.push(new Generator (50,50,x,y,"alien"));
 		// var e = new enemy(x,y,speed);
 		// enemies.push(e);
 	}
-    aliens.forEach(function(alien1){
-       
-        alien1.x += alien1.dx1;
-        alien1.y += alien1.dy1;
-        if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  //|| alien1.y <20 || alien1.y >560
-        //if(this.x >= W-this.width || this.x <=0)
-        {
-            alien1.dx1 *= -1;
-            //alien1.dy1 *= -1;
 
-        }
-        this.y += 0.5;
-        alien1.update();
-		//alien1.update();
-	});
+
+    // aliens.forEach(function(alien1){
+       
+    //     alien1.x += alien1.dx1;
+    //     //alien1.y += alien1.dy1;
+    //     if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  //|| alien1.y <20 || alien1.y >560
+    //     //if(this.x >= W-this.width || this.x <=0)
+    //     {
+    //         alien1.dx1 *= -1;
+    //         //alien1.dy1 *= -1;
+
+    //     }
+    //     //this.y += 5;
+    //     alien1.update();
+	// 	//alien1.update();
+	// });
+
+    // aliens.forEach(function(alien1){
+       
+    //     alien1.x += alien1.dx1;
+    //     alien1.y += alien1.dy1;
+    //     if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  //|| alien1.y <20 || alien1.y >560
+    //     //if(this.x >= W-this.width || this.x <=0)
+    //     {
+    //         alien1.dx1 *= -1;
+    //         //alien1.dy1 *= -1;
+
+    //     }
+    //     this.y += 5;
+    //     alien1.update();
+	// 	//alien1.update();
+	// });
 
     // for(let i=0;i<aliens.length;i++)
     // {
     //     //aliens[i].x += -0.8;
     //     console.log("updating");
     //     aliens[i].x += aliens[i].dx;
-    //     if(aliens[i].x>20 || aliens[i].x<1150)
+    //     if(aliens[i].x>50 || aliens[i].x<1150)
     //     {
     //         aliens[i].dx *= -1;
 
@@ -338,6 +579,10 @@ function updateGameArea()
        
 
     // }
+
+
+
+
     aliens.forEach(function(enemy){
 		if(isColliding(player,enemy)){
 			alert(`Game over. Press OK to restart! your score:${score}`);
