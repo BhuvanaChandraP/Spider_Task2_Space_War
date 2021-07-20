@@ -6,16 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space War</title>
     <link rel = "stylesheet" href ="style1.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia&effect=neon|outline|emboss|shadow-multiple">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia&effect=fire">
 </head>
 <body>
-    <ol id="list" type = "1"></ol>
-    <a href = main.html><button>start</button></a>
-    <h2> Levels based on :</h2>
-    
-    <div id = "setting" onclick="display();" >
-        <input type="radio" id="score" name="type" value="score" >Score<br>
-        <input type="radio" id="time" name="type" value="time">Time<br>
+    <h1 id = "title" class= "font-effect-outline">Space War</h1>
+    <div id = "leaderBoard">
+        <h2 >Leader Board</h2>
+        <ol id="list" type = "1"></ol>
     </div>
+    <div id = "instructions">
+        <h2>Instructions</h2>
+        <p>1.Destroy the aliens and safe gaurd yourself</p>
+        <p>2.If you chrash with aliens you will be lost</p>
+        <p>3.Press Arrow Keys to move Up Down Left and Right</p>
+        <p>4.Press space bar to shoot the aliens</p>
+        <p>5.The game consists of 5 levels of increasing difficulty and a bonus level where you would encounter a lot of aliens</p>
+        <p>6.You can either choose to increase the difficulty  of  the game  on the basis of score or time</p>
+    </div>
+    
+    <a href = main.html  id = "start" ><button>start</button></a>
+    <div id = "set">
+        <h2> Levels based on :</h2>
+    
+        <div id = "setting" onclick="display();" >
+            <input type="radio" id="score" name="type" value="score" >Score<br>
+            <input type="radio" id="time" name="type" value="time">Time<br>
+        </div>
+    </div>
+    
+   
     <script src = "app1.js"></script>
 </body>
 </html>

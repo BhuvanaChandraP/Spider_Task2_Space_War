@@ -1,8 +1,14 @@
-let collect = [];
 
+
+let collect = [];
 let check = document.getElementById("setting");
 let check1;
-
+let userName = prompt("Enter your user name");
+for(;userName == "" || userName == null;)
+{
+    userName = prompt("Enter your user name"); 
+}
+localStorage.setItem("user",userName);
 
 function display (){
     if(document.getElementById("score").checked){
