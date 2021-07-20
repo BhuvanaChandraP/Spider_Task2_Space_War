@@ -11,6 +11,9 @@ let alien12 = document.getElementById("alien1");
 let alien13 = document.getElementById("alien2");
 let alien14 = document.getElementById("alien3");
 let alien15 = document.getElementById("alien4");
+let monster1 =[];
+let monster2 =[];
+let ctr =0  ,ctr1 =0;
 
 let bullet1 = document.getElementById("bullet");
 let blast1 = document.getElementById("blast");
@@ -27,7 +30,7 @@ let score = 0;
 let collect = [];
 let names = [];
 let i=0;
-let flg = 0;
+let flg = 0,flg2 =0,flg3 =0,flg4 =0;
 let flg1 = 0;
 let pause1 = document.getElementById("pause");
 let play1 = document.getElementById("play");  
@@ -105,6 +108,7 @@ function shoot()
     flg1 = 1;
     if(score >150)
     {
+        flg4 = 1;
         bullets = new Generator (10,30,(player.x+ player.width/2 -20),player.y,"bullet");
         bullets1 = new Generator (10,30,(player.x+ player.width/2 -10),player.y,"bullet");
         bullets2 = new Generator (10,30,(player.x+ player.width/2 +10),player.y,"bullet");
@@ -112,14 +116,17 @@ function shoot()
     }
     else if(score > 100)
     {
+        flg3 = 1;
         bullets = new Generator (10,30,(player.x+ player.width/2 -15),player.y,"bullet");
         bullets1 = new Generator (10,30,(player.x+ player.width/2 ),player.y,"bullet");
         bullets2 = new Generator (10,30,(player.x+ player.width/2 +15),player.y,"bullet");
     }
     else if(score > 50)
     {
+        flg2 = 1;
         bullets = new Generator (10,30,(player.x+ player.width/2 -10),player.y,"bullet");
         bullets1 = new Generator (10,30,(player.x+ player.width/2 +10),player.y,"bullet");
+        
     }
     else
     {
@@ -131,7 +138,16 @@ function shoot()
         
        
     }
-   
+    if(isCollidingWithMonster(bullets,monster1))
+    {
+        ctr++;
+        //console.log(ctr);
+    }
+    if(isCollidingWithMonster(bullets,monster2))
+    {
+        ctr1++;
+        //console.log(ctr);
+    }
     aliens.forEach(function(enemy){
     if(isCollidingWithBullet(bullets,enemy)){
         if(localStorage.getItem("type") == "score")
@@ -181,7 +197,7 @@ function shoot()
                 score = score + 5 ;
             }
         }
-        score++;
+        
         this.state = "inactive";
         console.log("enemy died");
         
@@ -204,9 +220,12 @@ function shoot()
 }
 
 
-function isCollidingWithPowerUp (r1,r2)
+function isCollidingWithMonster (r1,r2)
 {
+    let x_axis = Math.abs(r1.x - r2.x)<= Math.max(r1.width,r2.width);
+	let y_axis = Math.abs(r1.y - r2.y)<= Math.max(r1.height,r2.height);
 
+	return x_axis || y_axis;
 }
 
 
@@ -391,7 +410,26 @@ function updateGameArea()
     player.update();
     
     
+    // monster1 = new Generator (100,100,1000,50,"alien4");
+    // monster2 = new Generator (100,100,100,50,"alien4");
+    
+    // if(ctr >= 10)
+    // {
 
+    // }
+    // else
+    // {
+    //     monster1.update();
+    // }
+    // if(ctr1 >= 10)
+    // {
+
+    // }
+    // else
+    // {
+    //     monster2.update();
+    // }
+   
 
     let no =  Math.random();
     let num ;
@@ -433,22 +471,42 @@ function updateGameArea()
     
                 }
         }
-        else
+        else if(score < 240)
         {
             if(score < 100)
             {
                 num = 0.009;
                 level.innerHTML = ` &nbsp  3`;
             }
-            else if (score < 180 )
+            else if (score < 240 )
             {
                 num = 0.01;
                 level.innerHTML = ` &nbsp  4`;
+                monster1 = new Generator (100,100,1000,50,"alien4");
+                monster2 = new Generator (100,100,100,50,"alien4");
+                
+                if(ctr >= 10)
+                {
+                    score = score + 50;
+                }
+                else
+                {
+                    monster1.update();
+                }
+                if(ctr1 >= 10)
+                {
+                    score = score + 50;
+                }
+                else
+                {
+                    monster2.update();
+                }
+   
             }     
             else 
             {
-                num = 0.03;
-                level.innerHTML = ` &nbsp  5`;
+                // num = 0.03;
+                // level.innerHTML = ` &nbsp  5`;
             }    
          
             aliens.forEach(function(alien1){
@@ -466,6 +524,42 @@ function updateGameArea()
                 
             });
            
+        }
+        else if ((ctr >=10 && ctr1 >= 10) && score <350 )
+        {
+            num = 0.06;
+            level.innerHTML = `bonus`;
+            for(let i=0;i<aliens.length;i++)
+            {
+                    
+                    aliens[i].x += aliens[i].dx1;
+                    if(aliens[i].x>1150 || aliens[i].x<50)
+                    {
+                        aliens[i].dx1 *= -1;
+    
+                    }
+                    aliens[i].update();
+                   
+    
+            }
+        }
+        else {
+            num = 0.05;
+            level.innerHTML = ` &nbsp  5`;
+            aliens.forEach(function(alien1){
+           
+                alien1.x += alien1.dx1;
+                alien1.y += alien1.dy1;
+                if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)       
+                {
+                    alien1.dx1 *= -1;
+                   
+        
+                }
+                this.y += 0.5;
+                alien1.update();
+                
+            });
         }
     
     
@@ -497,16 +591,16 @@ function updateGameArea()
             level.innerHTML = `&nbsp  2`;
            
             for(let i=0;i<aliens.length;i++)
-                {
+            {
                     
                     aliens[i].y += aliens[i].dy1;
                     
                     aliens[i].update();
                    
     
-                }
+            }
         }
-        else
+        else if (GameCanvas.frameNo < 12000)
         {
             if(GameCanvas.frameNo < 7000)
             {
@@ -517,11 +611,29 @@ function updateGameArea()
             {
                 num = 0.01;
                 level.innerHTML = ` &nbsp  4`;
+                monster1 = new Generator (100,100,1000,50,"alien4");
+                monster2 = new Generator (100,100,100,50,"alien4");
+                
+                if(ctr >= 10)
+                {
+
+                }
+                else
+                {
+                    monster1.update();
+                }
+                if(ctr1 >= 10)
+                {
+
+                }
+                else
+                {
+                    monster2.update();
+                }
             }     
             else 
             {
-                num = 0.03;
-                level.innerHTML = ` &nbsp  5`;
+                
             }    
             aliens.forEach(function(alien1){
            
@@ -538,6 +650,44 @@ function updateGameArea()
               
             });
            
+        }
+        else if ((ctr >=10 && ctr1 >= 10) && score <350 )
+        {
+            num = 0.06;
+            level.innerHTML = `bonus`;
+            for(let i=0;i<aliens.length;i++)
+            {
+                    
+                    aliens[i].x += aliens[i].dx1;
+                    if(aliens[i].x>1150 || aliens[i].x<50)
+                    {
+                        aliens[i].dx1 *= -1;
+    
+                    }
+                    aliens[i].update();
+                   
+    
+            }
+        }
+        else 
+        {
+            num = 0.05;
+            level.innerHTML = ` &nbsp  5`;
+            aliens.forEach(function(alien1){
+           
+                alien1.x += alien1.dx1;
+                alien1.y += alien1.dy1;
+                if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  
+                {
+                    alien1.dx1 *= -1;
+                    
+        
+                }
+                this.y += 0.5;
+                alien1.update();
+              
+            });
+
         }
     
     
@@ -568,7 +718,7 @@ function updateGameArea()
             
             else if(score < 50 )
             {
-                console.log("reached level 2")
+                //console.log("reached level 2")
                 if(alienCounter < 70)
                 {
                     aliens.push(new Generator (50,50,x,y,"alien1"));
@@ -615,7 +765,7 @@ function updateGameArea()
             
             else if(GameCanvas.frameNo < 3500 )
             {
-                console.log("reached level 2")
+                //console.log("reached level 2")
                 if(alienCounter < 50)
                 aliens.push(new Generator (50,50,x,y,"alien1"));
             }
@@ -643,18 +793,44 @@ function updateGameArea()
 		}
 
 	});
+    // monster1.forEach(function(enemy){
+	// 	if(isColliding(bullets,enemy)){
+            
+    //         ctr++;
+			
+			
+	// 	}
+    //     if(ctr  == 10)
+    //     {
+    //         let index = monster1.indexOf(enemy);
+    //         monster.splice(index,1);
+    //     }
+
+	// });
 
     if(flg1 != 0){
         bullets.y -= bullets.dy;
         bullets.update();
+       
+        
+       
+    }
+    if(flg2 !=0)
+    {
         bullets1.y -= bullets1.dy;
         bullets1.update();
+    }
+    if(flg3 !=0)
+    {
         bullets2.y -= bullets2.dy;
         bullets2.update();
+    }
+    if(flg4 !=0)
+    {
         bullets3.y -= bullets3.dy;
         bullets3.update();
+        
     }
-   
 
 }
 
