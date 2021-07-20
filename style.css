@@ -13,7 +13,19 @@
 #player{
     display:none;
 }
+#alien{
+    display: none;
+}
 #alien1{
+    display: none;
+}
+#alien2{
+    display: none;
+}
+#alien3{
+    display: none;
+}
+#alien4{
     display: none;
 }
 #bullet{

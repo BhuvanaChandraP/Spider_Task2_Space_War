@@ -4,7 +4,13 @@ let player;
 let aliens = [];
 let bullets = [];
 let player1 = document.getElementById("player");
-let alien11 = document.getElementById("alien1");
+
+let alien11 = document.getElementById("alien");
+let alien12 = document.getElementById("alien1");
+let alien13 = document.getElementById("alien2");
+let alien14 = document.getElementById("alien3");
+let alien15 = document.getElementById("alien4");
+
 let bullet1 = document.getElementById("bullet");
 let blast1 = document.getElementById("blast");
 let blast2;
@@ -16,14 +22,17 @@ let collect = [];
 let names = [];
 let i=0;
 let flg = 0;
+let flg1 = 0;
 let pause1 = document.getElementById("pause");
 let play1 = document.getElementById("play");  
 let level = document.getElementById("levelNo");
 let score1 = document.getElementById("score1");
+
+let alienCounter  =0;
 score1.innerHTML = `&nbsp ${score}`;
 play1.style.display = "none";
 let userName = prompt("Enter your user name");
-for(;userName == "" && userName == null;)
+for(;userName == "" || userName == null;)
 {
     userName = prompt("Enter your user name"); 
 }
@@ -99,22 +108,70 @@ function startGame()
 
 function shoot()
 {
+    flg1 = 1;
     bullets = new Generator (10,30,(player.x+ player.width/2 -5),player.y,"bullet");
+
     aliens.forEach(function(enemy){
     if(isCollidingWithBullet(bullets,enemy)){
+        if(localStorage.getItem("type") == "score")
+        {
+            if(score <15)
+            {
+                score++;
+            }
+            else if(score < 50)
+            {
+                score = score +2;
+            }
+            else if (score < 100)
+            {
+                score = score +3;
+            }
+            else if(score < 180)
+            {
+                score = score +4;
+            }
+            else
+            {
+                score = score + 5;
+            }
+        }
+        else 
+        {
+            if (GameCanvas.frameNo <1500)
+            {
+                score++;
+            }
+            else if (GameCanvas.frameNo < 3500)
+            {
+                score = score + 2 ;
+            }
+            else if (GameCanvas.frameNo < 7000)
+            {
+                score = score + 3 ;
+            }
+            else if (GameCanvas.frameNo < 12000)
+            {
+                score = score + 4 ;
+            }
+            else 
+            {
+                score = score + 5 ;
+            }
+        }
         score++;
         this.state = "inactive";
         console.log("enemy died");
-        //var index = aliens.indexOf(enemy);
+        //let index = aliens.indexOf(enemy);
         setTimeout(function(){ 
-            var index = aliens.indexOf(enemy);
+            let index = aliens.indexOf(enemy);
             aliens.splice(index,1);
             score1.innerHTML = `&nbsp ${score}`;
-            blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-            blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-            blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-            blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-            blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+            // blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+            // blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+            // blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+            // blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
+            // blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
          }, 300);
         //aliens.splice(index,1);
 
@@ -127,14 +184,14 @@ function shoot()
 
 
 function isCollidingWithBullet(r1,r2){
-	var x_axis = Math.abs(r1.x - r2.x)<= Math.max(r1.width,r2.width);
-	var y_axis = Math.abs(r1.y - r2.y)<= Math.max(r1.height,r2.height);
+	let x_axis = Math.abs(r1.x - r2.x)<= Math.max(r1.width,r2.width);
+	let y_axis = Math.abs(r1.y - r2.y)<= Math.max(r1.height,r2.height);
 
 	return x_axis || y_axis;
 }
 function isColliding(r1,r2){
-	var x_axis = Math.abs(r1.x - r2.x)+40<= Math.max(r1.width,r2.width);
-	var y_axis = Math.abs(r1.y - r2.y)+40<= Math.max(r1.height,r2.height);
+	let x_axis = Math.abs(r1.x - r2.x)+40<= Math.max(r1.width,r2.width);
+	let y_axis = Math.abs(r1.y - r2.y)+40<= Math.max(r1.height,r2.height);
 
 	return x_axis && y_axis;
 }
@@ -198,31 +255,7 @@ let GameCanvas = {
     stop: function () {
         clearInterval(this.interval);
     }
-    // shoot : function()
-    // {
-    //     bullets = new Generator (10,30,(player.x+ player.width/2 -5),player.y,"bullet");
-    //     aliens.forEach(function(enemy){
-    //     if(isCollidingWithBullet(bullets,enemy)){
-    //     score++;
-    //     this.state = "inactive";
-    //     console.log("enemy died");
-    //     //var index = aliens.indexOf(enemy);
-    //     setTimeout(function(){ 
-    //         var index = aliens.indexOf(enemy);
-    //         aliens.splice(index,1);
-    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-    //         blast2 = new Generator(50,50,enemy.x,enemy.y,"blast");
-    //      }, 300);
-    //     //aliens.splice(index,1);
-
-       
-    //     //blast2.update();
-    //     }
-
-    // });
+    
 }
 
 
@@ -263,6 +296,22 @@ function Generator(width, height, x, y, type)
         else if(this.type == "alien")
         {
             ctx.drawImage(alien11,this.x, this.y, this.width, this.height );
+        }
+        else if(this.type == "alien1")
+        {
+            ctx.drawImage(alien12,this.x, this.y, this.width, this.height );
+        }
+        else if(this.type == "alien2")
+        {
+            ctx.drawImage(alien13,this.x, this.y, this.width, this.height );
+        }
+        else if(this.type == "alien3")
+        {
+            ctx.drawImage(alien14,this.x, this.y, this.width, this.height );
+        }
+        else if(this.type == "alien4")
+        {
+            ctx.drawImage(alien15,this.x, this.y, this.width, this.height );
         }
         else if(this.type == "bullet")
         {
@@ -319,42 +368,13 @@ function updateGameArea()
     player.newPos();
     player.update();
     
-    //level.text = `level : 1 `
-    //level.update();
-    //alien1.y += -0.5;
-
-
-    // aliens.forEach(function(enemy){
-	// 	enemy.update();
-	// });
     
 
-    // for (let i = 0; i < aliens.length; i++) {
-    //     aliens[i].x += aliens[i].dx;
-    //     if(aliens[i].x<20 || aliens[i].x>1150)
-    //     {
-    //         aliens[i].dx *= -1;
 
-    //     }
-    //     aliens[i].update();
-    //     // aliens[i].x += -1.5;
-    //     // aliens[i].update();
-    // }
-
-
-    // alien1.x += alien1.dx;
-    // if(alien1.x<20 || alien1.x>1150)
-    // {
-    //     alien1.dx *= -1;
-
-    // }
-    // alien1.update();
-
-
-    var no =  Math.random();
-    var num ;
+    let no =  Math.random();
+    let num ;
     //console.log(GameCanvas.frameNo);
-    console.log(localStorage.getItem("type"));
+    //console.log(localStorage.getItem("type"));
     if(localStorage.getItem("type") == "score")
     {
         if(score < 15)                        // GameCanvas.frameNo <1000
@@ -376,7 +396,7 @@ function updateGameArea()
             }
             
         }
-        else if(score < 40)         //  GameCanvas.frameNo >1000
+        else if(score < 50)         //  GameCanvas.frameNo >1000
         {
             num = 0.01;
             level.innerHTML = `&nbsp  2`;
@@ -397,12 +417,12 @@ function updateGameArea()
         }
         else
         {
-            if(score < 75)
+            if(score < 100)
             {
                 num = 0.009;
                 level.innerHTML = ` &nbsp  3`;
             }
-            else if (score < 125 )
+            else if (score < 180 )
             {
                 num = 0.01;
                 level.innerHTML = ` &nbsp  4`;
@@ -454,7 +474,7 @@ function updateGameArea()
             }
             
         }
-        else if(GameCanvas.frameNo < 3000)         //  GameCanvas.frameNo >1000
+        else if(GameCanvas.frameNo < 3500)         //  GameCanvas.frameNo >1000
         {
             num = 0.01;
             level.innerHTML = `&nbsp  2`;
@@ -475,12 +495,12 @@ function updateGameArea()
         }
         else
         {
-            if(score < 5000)
+            if(GameCanvas.frameNo < 7000)
             {
                 num = 0.009;
                 level.innerHTML = ` &nbsp  3`;
             }
-            else if (score < 10000 )
+            else if (GameCanvas.frameNo < 12000 )
             {
                 num = 0.01;
                 level.innerHTML = ` &nbsp  4`;
@@ -512,74 +532,95 @@ function updateGameArea()
     
     }
 
-   
+   if(localStorage.getItem("type") == "score")
+   {
+        if(no< num){
+            let x = Math.floor(Math.random()*(1200-50));
+            
+            let y = Math.floor(Math.random()*50);
+            alienCounter++;
 
+            if(score <15)
+            {
+                
+                if(alienCounter < 20)
+                {
+                    aliens.push(new Generator (50,50,x,y,"alien"));
+                }
+                // else
+                // {
+                //     aliens.push(new Generator (50,50,x,y,"alien1"));
+                // }
 
+                
+            }
+            
+            else if(score < 50 )
+            {
+                console.log("reached level 2")
+                if(alienCounter < 70)
+                {
+                    aliens.push(new Generator (50,50,x,y,"alien1"));
+                }
+                // else
+                // {
+                //     aliens.push(new Generator (50,50,x,y,"alien2"));
+                // }
+               
+            }
+            else
+            {
+                aliens.push(new Generator (50,50,x,y,"alien2"));
+                // aliens.push(new Generator (50,50,x,y,"alien1"));
+                // aliens.push(new Generator (50,50,x,y,"alien"));
+            }
+                
+            
+            
+        }
+   }
+   else
+   {
+        if(no< num){
+            let x = Math.floor(Math.random()*(1200-50));
+            
+            let y = Math.floor(Math.random()*50);
+            alienCounter++;
 
-	if(no< num){
-		var x = Math.floor(Math.random()*(1200-50));
-		// multiplied by 100 to generate enemies in the region from 0 to 100px.
-		var y = Math.floor(Math.random()*50);
+            if(GameCanvas.frameNo <1500)
+            {
+                
+                if(alienCounter < 20)
+                {
+                    aliens.push(new Generator (50,50,x,y,"alien"));
+                }
+                // else
+                // {
+                //     aliens.push(new Generator (50,50,x,y,"alien1"));
+                // }
 
-		// var speed = Math.random()*1 +2;
-		// var negative = Math.random();
-		// if(negative<0.5){
-		// 	speed = -speed;
-		// }
-        //aliens.push(new aliensfun(x,y,speed));
-        aliens.push(new Generator (50,50,x,y,"alien"));
-		// var e = new enemy(x,y,speed);
-		// enemies.push(e);
-	}
+                
+            }
+            
+            else if(GameCanvas.frameNo < 3500 )
+            {
+                console.log("reached level 2")
+                if(alienCounter < 50)
+                aliens.push(new Generator (50,50,x,y,"alien1"));
+            }
+            else
+            {
+                // aliens.push(new Generator (50,50,x,y,"alien2"));
 
-
-    // aliens.forEach(function(alien1){
-       
-    //     alien1.x += alien1.dx1;
-    //     //alien1.y += alien1.dy1;
-    //     if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  //|| alien1.y <20 || alien1.y >560
-    //     //if(this.x >= W-this.width || this.x <=0)
-    //     {
-    //         alien1.dx1 *= -1;
-    //         //alien1.dy1 *= -1;
-
-    //     }
-    //     //this.y += 5;
-    //     alien1.update();
-	// 	//alien1.update();
-	// });
-
-    // aliens.forEach(function(alien1){
-       
-    //     alien1.x += alien1.dx1;
-    //     alien1.y += alien1.dy1;
-    //     if(alien1.x<=50 || alien1.x>=1150 || alien1.y <=50 || alien1.y >550)  //|| alien1.y <20 || alien1.y >560
-    //     //if(this.x >= W-this.width || this.x <=0)
-    //     {
-    //         alien1.dx1 *= -1;
-    //         //alien1.dy1 *= -1;
-
-    //     }
-    //     this.y += 5;
-    //     alien1.update();
-	// 	//alien1.update();
-	// });
-
-    // for(let i=0;i<aliens.length;i++)
-    // {
-    //     //aliens[i].x += -0.8;
-    //     console.log("updating");
-    //     aliens[i].x += aliens[i].dx;
-    //     if(aliens[i].x>50 || aliens[i].x<1150)
-    //     {
-    //         aliens[i].dx *= -1;
-
-    //     }
-    //     aliens[i].update();
-       
-
-    // }
-
+                aliens.push(new Generator (50,50,x,y,"alien2"));
+                // aliens.push(new Generator (50,50,x,y,"alien1"));
+                // aliens.push(new Generator (50,50,x,y,"alien"));
+            }
+                
+            
+            
+        }
+   }
 
 
 
@@ -594,19 +635,29 @@ function updateGameArea()
 
 	});
 
-
-    bullets.y -= bullets.dy;
-    if(bullets.y<20 || bullets.y>1150)
-    {
-        alien1.dy *= -1;
-
+    if(flg1 != 0){
+        bullets.y -= bullets.dy;
+        bullets.update();
     }
-    bullets.update();
 
 }
 
 
-
-
-
 startGame();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
