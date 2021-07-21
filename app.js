@@ -206,9 +206,7 @@ function shoot()
             }
         }
         
-        this.state = "inactive";
-        console.log("enemy died");
-        
+        this.state = "inactive";        
         setTimeout(function(){ 
             let index = aliens.indexOf(enemy);
             aliens.splice(index,1);
@@ -261,8 +259,6 @@ let GameCanvas = {
         this.interval = setInterval(updateGameArea, 10);
         document.addEventListener('keydown', function(e){
             if(e.key==" "){
-               
-                console.log("space");
                 shoot();
             }
             if(e.key=="ArrowLeft"){
@@ -380,28 +376,7 @@ function Generator(width, height, x, y, type)
             ctx.fillText(this.text, this.x, this.y);
         }
     }
-    this.newPos = function () {
-        this.x += this.speedX;
-        this.y += this.speedY;
-    }
-    this.crashWith = function (holePosition) {
-        let left = this.x;
-        let right = this.x + (this.width);
-        let top = this.y;
-        let bottom = this.y + (this.height);
-        let holeLeft = holePosition.x;
-        let holeRight = holePosition.x + (holePosition.width);
-        let holeTop = holePosition.y;
-        let holeBottom = holePosition.y + (holePosition.height);
-        let crash = true;
-        
-        if ((bottom < holeTop) || (top > holeBottom) || (right < holeLeft) || (left > holeRight)) {     
-            crash = false;
-        }
-        return crash;
-      
-        
-    }
+    
 }
 
 
@@ -409,7 +384,6 @@ function updateGameArea()
 {
     GameCanvas.clearCanvas();
     GameCanvas.frameNo += 1;
-    player.newPos();
     player.update();
     
     let no =  Math.random();
