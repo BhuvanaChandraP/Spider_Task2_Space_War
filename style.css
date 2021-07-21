@@ -1,7 +1,7 @@
 
 #canvas{
     border: 5px solid red;
-    background : url("bg.png");
+    background : url("pictures/bg.png");
     animation: animatedBackground 20s linear infinite;
     background-repeat: repeat-y;
     margin-left: 75px;
