@@ -1,9 +1,10 @@
+
 #canvas{
     border: 5px solid red;
-    background : url("pictures/bg.png");
+    background : url("bg.png");
     animation: animatedBackground 20s linear infinite;
     background-repeat: repeat-y;
-    margin-left: 95px;
+    margin-left: 75px;
 }
 
 @keyframes animatedBackground   {
